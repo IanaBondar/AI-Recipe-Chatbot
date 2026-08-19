@@ -1,8 +1,11 @@
-# [Project name]
+# Kitchen Companion
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Local Streamlit AI recipe chatbot that uses LangGraph and Chroma to recommend uploaded recipes.
 
 ## Run & Operate
+
+- `cd recipe-chatbot && pip install -r requirements.txt && streamlit run app/main.py` — run the recipe chatbot locally
+- `cd recipe-chatbot && pytest` — run the Python test suite
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
@@ -22,15 +25,20 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `recipe-chatbot/app/` — Streamlit UI, ingestion, retrieval, prompts, and LangGraph workflow
+- `recipe-chatbot/data/example-recipes/` — immediately usable sample recipes
+- `recipe-chatbot/tests/` — parsing and graph tests
+- `recipe-chatbot/README.md` — local setup and usage guide
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Chroma is persistent and local; no SQL database or user accounts are needed.
+- The graph is deliberately three nodes: understand request, retrieve recipes, generate response.
+- Without an API key, a deterministic local hash embedding and concise fallback response keep the app usable for demos.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Users upload text or Markdown recipes, index them locally, ask natural-language dinner questions, and see grounded recommendations with source recipe names.
 
 ## User preferences
 

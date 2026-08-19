@@ -1,0 +1,1 @@
+- [Chroma embeddings](chroma-embeddings.md) — always pass an explicit embedding function, with a local fallback for no-key demo mode.

@@ -1,0 +1,315 @@
+You are a senior Python engineer specializing in LLM applications. Build a small, clean, production-minded pet project: a local web application that works as an AI recipe chatbot.
+
+## Goal
+
+Create a Python web application where the user can:
+
+1. Upload recipe files.
+2. Ask questions in natural language through a chat interface.
+3. Ask what they can cook for dinner based on the uploaded recipes.
+4. Let the LLM infer the user's intent and suggest suitable recipes according to the request.
+
+Examples:
+
+* "What can I make for dinner?"
+* "I want something filling."
+* "Suggest something light."
+* "I want a meat-based dinner."
+* "I want something fruity."
+* "I don't want to spend more than 30 minutes cooking."
+* "I want something healthy and light."
+* "I have guests tonight, what would you recommend?"
+* "I want something with chicken."
+* "Surprise me."
+
+The application should NOT use hardcoded categories such as "meat", "light", "fruity", etc. The LLM should understand the user's natural-language request and decide which recipes are relevant.
+
+## Technology
+
+Use:
+
+* Python 3.12+
+* LangChain
+* LangGraph
+* A lightweight Python web framework suitable for a local pet project (prefer Streamlit unless there is a strong reason to use another framework)
+* Pydantic for structured data validation
+* A vector store that is simple to run locally (prefer Chroma or an equivalent lightweight option)
+* An embedding model for recipe retrieval
+* An LLM accessible through a configurable API
+* `.env` for configuration/secrets
+
+Keep the dependency list small.
+
+## Architecture
+
+Use a simple RAG architecture combined with LangGraph.
+
+The high-level flow should be:
+
+User → Chat UI → LangGraph → intent/query understanding → recipe retrieval → LLM response → Chat UI
+
+When recipes are uploaded:
+
+1. Read the files.
+2. Parse recipe content.
+3. Split recipes into appropriate chunks if necessary.
+4. Generate embeddings.
+5. Store documents and metadata in the local vector database.
+
+When the user sends a message:
+
+1. LangGraph receives the message and conversation state.
+2. The LLM interprets the user's request.
+3. Generate an appropriate semantic search query from the request.
+4. Retrieve the most relevant recipes.
+5. Give the retrieved recipes and the user's request to the LLM.
+6. Generate a concise, useful answer.
+7. Return the answer to the chat UI.
+
+Use LangGraph explicitly to represent the workflow as a graph of nodes rather than hiding the entire process inside one function.
+
+## LangGraph design
+
+Create a small but meaningful graph, for example:
+
+* `understand_request`
+* `retrieve_recipes`
+* `generate_response`
+
+Use a typed state object, preferably a Pydantic model or TypedDict.
+
+The state should contain only information that is actually needed, such as:
+
+* conversation messages
+* user request
+* generated search query
+* retrieved recipes/documents
+* final answer
+
+Do not over-engineer the graph.
+
+## Recipe ingestion
+
+The application should support uploading common text-based recipe formats, preferably:
+
+* `.txt`
+* `.md`
+* optionally `.pdf`
+
+Each recipe should ideally have metadata such as:
+
+* recipe name
+* source/file name
+* optional cuisine
+* optional cooking time
+
+Do not require a rigid recipe schema if the uploaded files are plain text. The system should still work with reasonably structured natural-language recipes.
+
+If extracting metadata, use the LLM only where it provides clear value. Avoid unnecessary LLM calls.
+
+## Retrieval
+
+Use semantic retrieval rather than keyword-only filtering.
+
+The user's query should be transformed into a retrieval-friendly query while preserving the semantic intent.
+
+For example:
+
+User:
+"I want something filling with meat, but I don't want to spend the whole evening cooking."
+
+Possible retrieval query:
+"hearty meat-based dinner, relatively quick preparation, suitable for an evening meal"
+
+The exact query should be generated dynamically by the LLM.
+
+Retrieve a small number of relevant recipes, e.g. top 5.
+
+The final LLM response should be grounded in retrieved recipes and should not invent recipes that do not exist in the uploaded collection.
+
+If no relevant recipes are found, clearly tell the user that there are no suitable uploaded recipes and suggest uploading more recipes.
+
+## Chat behavior
+
+The UI should feel like a simple chatbot.
+
+Requirements:
+
+* Chat history visible in the interface.
+* User messages and assistant messages clearly separated.
+* Recipe file upload area.
+* Ability to upload multiple recipes.
+* Clear indication that recipes have been indexed.
+* Optional button to clear/reset the local recipe database.
+* Show recipe names used as sources for the answer.
+* Keep the UI minimal and clean.
+
+The user should not need to understand embeddings, vector databases, LangChain, or LangGraph.
+
+## Response behavior
+
+The assistant should answer naturally rather than returning raw retrieved documents.
+
+For example, if the user asks:
+
+"What can I make for dinner?"
+
+The answer should look conceptually like:
+
+"Based on your recipes, I'd consider these three options:
+
+1. Chicken curry — filling and flavorful.
+2. Beef pasta — hearty and relatively quick.
+3. Roasted chicken with vegetables — substantial but balanced.
+
+I'd pick the chicken curry if you want something especially satisfying."
+
+The exact response should depend entirely on the uploaded recipes.
+
+When useful, explain briefly why a recipe matches the user's request.
+
+Do not expose internal reasoning or chain-of-thought.
+
+## Project structure
+
+Use a clean, small project structure, for example:
+
+```text
+recipe-chatbot/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── config.py
+│   ├── models.py
+│   ├── ingestion.py
+│   ├── retrieval.py
+│   ├── graph.py
+│   └── prompts.py
+├── data/
+│   └── .gitkeep
+├── tests/
+│   └── ...
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── README.md
+└── pyproject.toml
+```
+
+You may adjust the structure if you have a clearly better small-project architecture.
+
+Avoid unnecessary abstractions, factories, service layers, repositories, dependency injection frameworks, or enterprise architecture.
+
+This is a pet project, not a large production system.
+
+## Code quality
+
+Follow modern Python practices:
+
+* Python type hints
+* Pydantic models where appropriate
+* small functions with clear responsibilities
+* descriptive names
+* minimal global state
+* environment-based configuration
+* clear error handling
+* no unnecessary classes
+* no duplicated logic
+* no magic constants
+* modern LangChain APIs
+* modern LangGraph APIs
+* async only where it provides real value
+
+Prefer simple, readable code over clever code.
+
+Do not use deprecated LangChain APIs.
+
+## Configuration
+
+Use environment variables such as:
+
+```text
+OPENAI_API_KEY=
+OPENAI_MODEL=
+EMBEDDING_MODEL=
+```
+
+If you choose a different LLM provider, keep the provider-specific configuration isolated and clearly documented.
+
+The application should start locally with a small number of commands.
+
+## README
+
+Create a concise but complete README containing:
+
+1. What the project does.
+2. Architecture overview.
+3. Prerequisites.
+4. Installation instructions.
+5. Environment variable setup.
+6. How to run the application locally.
+7. How to upload recipes.
+8. Example questions to ask the chatbot.
+9. Brief explanation of how LangGraph and RAG are used.
+10. Known limitations.
+
+Include example recipe files so the application can be tested immediately after installation.
+
+## Error handling
+
+Handle common cases gracefully:
+
+* missing API key
+* unsupported file type
+* empty uploaded file
+* failed document parsing
+* no indexed recipes
+* no relevant recipes found
+* LLM/API failure
+* vector database initialization failure
+
+Errors shown to the user should be understandable and should not expose stack traces or secrets.
+
+## Testing
+
+Add a small but useful test suite.
+
+Test at least:
+
+* recipe parsing
+* basic document ingestion
+* request/query transformation where practical
+* graph behavior with mocked LLM/retrieval components
+* handling an empty recipe collection
+
+Do not make tests depend on a real external LLM API.
+
+## Important constraints
+
+* Keep the entire project small enough for a pet project.
+* Do not add authentication.
+* Do not add a SQL database.
+* Do not add a frontend framework such as React.
+* Do not add Docker unless it is genuinely useful.
+* Do not implement user accounts.
+* Do not implement complex recommendation algorithms.
+* Do not hardcode semantic categories.
+* Do not build a complicated agent with many tools.
+* Do not expose chain-of-thought.
+* Do not invent recipes when the requested answer should be based on uploaded recipes.
+* Prefer straightforward RAG + LangGraph over an unnecessarily complex agent architecture.
+
+## Deliverables
+
+Generate the complete runnable project, including:
+
+1. All Python source files.
+2. `requirements.txt` or `pyproject.toml`.
+3. `.env.example`.
+4. Example recipe files.
+5. Tests.
+6. README with exact local setup and run commands.
+
+Before presenting the code, briefly explain the architecture and the main design decisions.
+
+Make sure the generated code is internally consistent and runnable as provided. Check imports, package paths, LangChain/LangGraph API usage, configuration names, and startup commands.
