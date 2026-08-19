@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -69,52 +70,52 @@
   --text-9xl--line-height: 1;
 }
 
-/* LIGHT MODE - Default theme with placeholder values */
+/* LIGHT MODE - Kitchen Companion / warm editorial pantry */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(56, 42, 31, .14);
+  --badge-outline: rgba(56, 42, 31, .08);
   --opaque-button-border-intensity: -8;
 
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(84, 65, 47, .04);
+  --elevate-2: rgba(84, 65, 47, .09);
 
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 240 5.9% 10%;
+  --background: 38 33% 95%;
+  --foreground: 28 23% 19%;
+  --card: 42 40% 98%;
+  --card-foreground: 28 23% 19%;
+  --popover: 42 40% 98%;
+  --popover-foreground: 28 23% 19%;
+  --primary: 17 58% 51%;
+  --primary-foreground: 40 44% 98%;
+  --secondary: 38 27% 89%;
+  --secondary-foreground: 28 23% 25%;
+  --muted: 38 25% 91%;
+  --muted-foreground: 28 11% 49%;
+  --accent: 42 73% 66%;
+  --accent-foreground: 28 23% 19%;
+  --destructive: 4 59% 48%;
+  --destructive-foreground: 40 44% 98%;
+  --border: 35 23% 84%;
+  --input: 35 23% 84%;
+  --ring: 17 58% 51%;
+  --chart-1: 17 58% 51%;
+  --chart-2: 83 19% 42%;
+  --chart-3: 42 73% 66%;
+  --chart-4: 28 39% 35%;
+  --chart-5: 4 59% 48%;
+  --sidebar: 38 28% 91%;
+  --sidebar-foreground: 28 23% 25%;
+  --sidebar-primary: 17 58% 51%;
+  --sidebar-primary-foreground: 40 44% 98%;
+  --sidebar-accent: 38 33% 95%;
+  --sidebar-accent-foreground: 28 23% 19%;
+  --sidebar-border: 35 23% 84%;
+  --sidebar-ring: 17 58% 51%;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: Menlo, monospace;
-  --radius: .5rem;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'DM Sans', sans-serif;
+  --radius: .85rem;
   --spacing: 0.25rem;
 }
 
@@ -159,6 +160,24 @@
   --sidebar-accent-foreground: 240 4.8% 95.9%;
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 240 4.9% 83.9%;
+}
+
+@keyframes kitchen-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes kitchen-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@layer utilities {
+  .kitchen-rise { animation: kitchen-rise 600ms cubic-bezier(.22, 1, .36, 1) both; }
+  .kitchen-rise-delay-1 { animation-delay: 80ms; }
+  .kitchen-rise-delay-2 { animation-delay: 160ms; }
+  .kitchen-rise-delay-3 { animation-delay: 240ms; }
+  .kitchen-fade { animation: kitchen-fade 500ms ease both; }
 }
 
 @layer base {
