@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Kitchen Companion"
+description = "A calm AI recipe chatbot that lets people upload recipes, browse their local shelf, and ask natural-language questions about what to cook."
+version = "1.0.0"
+id = "artifacts/kitchen-companion"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25230
+
+[services.development]
+run = "pnpm --filter @workspace/kitchen-companion run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/kitchen-companion", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/kitchen-companion/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25230"
+BASE_PATH = "/"
